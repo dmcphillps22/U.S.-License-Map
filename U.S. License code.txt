@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Plate Road Trip</title>
+    <style>
+        svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .state {
+            fill: lightgray;
+            stroke: #fff;
+            stroke-width: 2;
+            cursor: pointer;
+        }
+
+        .marked {
+            fill: green;
+        }
+
+        #resetButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>License Plate Road Trip</h1>
+    <p>Click on a state once you've seen its license plate!</p>
+
+    <div id="map-container">
+        <!-- Embed an SVG map of the US -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" id="us-map">
+            <!-- Example state -->
+            <path id="CA" class="state" d="M50,200 L150,200 L150,300 L50,300 Z" title="California"></path>
+            <!-- Add more states here... -->
+        </svg>
+    </div>
+
+    <button id="resetButton">Reset Map</button>
+
+    <script>
+        // Get all state elements
+        const states = document.querySelectorAll('.state');
+
+        // Load marked states from local storage
+        const markedStates = JSON.parse(localStorage.getItem('markedStates')) || [];
+
+        // Function to mark a state
+        function markState(state) {
+            if (!state.classList.contains('marked')) {
+                state.classList.add('marked');
+                markedStates.push(state.id);
+                localStorage.setItem('markedStates', JSON.stringify(markedStates));
+            }
+        }
+
+        // Add event listeners to each state
+        states.forEach(state => {
+            if (markedStates.includes(state.id)) {
+                state.classList.add('marked');
+            }
+            state.addEventListener('click', () => markState(state));
+        });
+
+        // Reset button to clear the map
+        document.getElementById('resetButton').addEventListener('click', () => {
+            states.forEach(state => state.classList.remove('marked'));
+            localStorage.removeItem('markedStates');
+        });
+    </script>
+    
+</body>
+</html>
